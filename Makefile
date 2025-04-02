@@ -23,7 +23,7 @@ The format is as follows:
 		Option: (1) Agent Circuit ID
 			Agent Circuit ID: BSSID:ESSID
 		Option: (2) Agent Remote ID
-			Agent Remote ID: hostname
+			Agent Remote ID: AP Hostname
 endef
 
 define Build/Prepare
