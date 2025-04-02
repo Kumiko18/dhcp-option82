@@ -12,7 +12,7 @@ define Package/opt82
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=A utility to insert DHCP agent information
-	DEPENDS:=+libpcap +libiwinfo
+	DEPENDS:=+libpcap
 	MAINTAINER:=kmk <alex18_huang@accton.com>
 endef
 

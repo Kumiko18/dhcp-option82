@@ -15,7 +15,6 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <syslog.h>
-#include <iwinfo.h>
 
 #include "opt82.h"
 
@@ -64,68 +63,6 @@ void cleanup() {
         provided_ssids = NULL;
     }
     syslog(LOG_INFO, "Cleanup complete.\n");
-}
-
-// Function to map SSID to wireless interface using iwinfo
-int map_ssid_to_interface(const char* ssid, char* interface, size_t len, char* bssid, size_t bssid_len) {
-    const struct iwinfo_ops *iw = iwinfo_backend(NULL);
-    char ifaces[MAX_INTERFACES][IFNAMSIZ];
-    int count = 0;
-
-    if (!iw) {
-        syslog(LOG_ERR, "Failed to initialize iwinfo - terminating program\n");
-        cleanup();
-        exit(1);  // Terminate if iwinfo initialization fails
-    }
-
-    // Get all wireless interfaces
-    DIR *dir = opendir("/sys/class/net");
-    if (!dir) {
-        syslog(LOG_ERR, "Failed to open /sys/class/net - terminating program\n");
-        cleanup();
-        iwinfo_finish();
-        exit(1);
-    }
-
-    struct dirent *ent;
-    while ((ent = readdir(dir)) != NULL && count < MAX_INTERFACES) {
-        if (strncmp(ent->d_name, "wlan", 4) == 0) {
-            strncpy(ifaces[count++], ent->d_name, IFNAMSIZ);
-        }
-    }
-    closedir(dir);
-
-    // Check each interface for matching SSID and get BSSID
-    for (int i = 0; i < count; i++) {
-        char buf[IWINFO_ESSID_MAX_SIZE + 1];
-        char mac[17 + 1];
-        
-        // Get SSID
-        if (iw->ssid(ifaces[i], buf) != 0) {
-            continue;  // Skip if we can't get SSID
-        }
-        
-        if (strcmp(buf, ssid) != 0) {
-            continue;  // Skip if SSID doesn't match
-        }
-
-        // Get BSSID
-        if (iw->bssid(ifaces[i], mac) != 0) {
-            syslog(LOG_ERR, "Failed to get BSSID for interface %s - terminating program\n", ifaces[i]);
-            cleanup();
-            iwinfo_finish();
-            exit(1);
-        }
-
-        strncpy(interface, ifaces[i], len);
-        strncpy(bssid, mac, bssid_len);
-        iwinfo_finish();
-        return 0;
-    }
-
-    iwinfo_finish();
-    syslog(LOG_DEBUG, "No interface found for SSID: %s\n", ssid);
-    return -1;
 }
 
 // Function to parse SSIDs and populate iface_map

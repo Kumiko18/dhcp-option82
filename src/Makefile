@@ -7,7 +7,7 @@ obj-y := opt82.o
 all: opt82
 
 opt82: $(obj-y)
-	$(CC) $(LDFLAGS) -lpcap -liwinfo -o $@ $(obj-y)
+	$(CC) $(LDFLAGS) -lpcap -o $@ $(obj-y)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(TARGET_CFLAGS) -c $< -o $@
