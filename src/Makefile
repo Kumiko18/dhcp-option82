@@ -1,0 +1,16 @@
+include	$(TOPDIR)/rules.mk
+
+TARGET_CFLAGS += -Wall
+
+obj-y := opt82.o
+
+all: opt82
+
+opt82: $(obj-y)
+	$(CC) $(LDFLAGS) -lpcap -liwinfo -o $@ $(obj-y)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(TARGET_CFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o opt82

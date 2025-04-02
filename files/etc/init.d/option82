@@ -1,0 +1,57 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+
+START=95
+STOP=10
+
+SERVICE_NAME="option82"
+PROG=/usr/bin/opt82
+
+start_service() {
+    local ssid_list=""
+    local ssids=""
+
+    # Load the option82 config
+    config_load option82
+
+    # Function to process each ssid
+    append_ssid() {
+        local value="$1"
+        if [ -n "$ssids" ]; then
+            ssids="$ssids,$value"
+        else
+            ssids="$value"
+        fi
+    }
+
+
+    config_load option82
+
+    config_list_foreach ssids ssid append_ssid
+
+    # Optional: Log or echo for debugging
+    logger -t option82 "Generated SSIDs=$ssids"
+
+    procd_open_instance
+    procd_set_param command $PROG
+    procd_set_param env SSIDs="$ssids"
+    procd_set_param respawn 3600 10 10
+    procd_set_param file /etc/config/option82
+    procd_set_param reload_signal SIGHUP
+    procd_close_instance
+}
+
+stop_service() {
+    procd_kill $SERVICE_NAME
+}
+
+reload_service() {
+    procd_send_signal $SERVICE_NAME
+}
+
+restart_service() {
+    stop
+    sleep 1
+    start
+}
