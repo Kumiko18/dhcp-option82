@@ -98,7 +98,7 @@ int parse_ssids(const char* ssids) {
     }
 
     // Execute iwinfo command and capture output
-    FILE* pipe = popen("iwinfo | grep wlan -A1 | grep -v \"^--\" | tr -d '\"' | awk '/wlan/ {name=$1; essid=$3} /Access Point/ {print name \"=\" essid \",\" $3}' | tr -d ':'", "r");
+    FILE* pipe = popen("iwinfo | grep ESSID -A1 | grep -v \"^--\" | tr -d '\"' | awk '/ESSID/ {name=$1; essid=$3} /Access Point/ {print name \"=\" essid \",\" $3}' | tr -d ':'", "r");
     if (!pipe) {
         syslog(LOG_ERR, "Failed to execute iwinfo command\n");
         free(ssid_set);
