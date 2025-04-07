@@ -45,7 +45,7 @@ add "option82" under ssid->services
                     "name": "EAP101-ERICHI",
                     "services": [
                         "wifi-frames",
-                        "option82"     <-- devices connected to this ssid will trigger this application
+                        "dhcpinject"     <-- devices connected to this ssid will trigger this application
                     ],
                     "wifi-bands": [
                         "2G",
