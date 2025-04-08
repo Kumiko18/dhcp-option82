@@ -33,6 +33,12 @@ struct iface_info {
     int serial;
 };
 
+struct port_info {
+    char name[LEN_IFACE + 1];
+    int sock;
+    int ifindex;
+};
+
 // VLAN header structure
 struct vlan_hdr {
     __be16 h_vlan_TCI;              // VLAN Tag Control Information

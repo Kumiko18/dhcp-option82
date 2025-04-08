@@ -12,7 +12,7 @@ define Package/udhcpinject
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=An agent to inject DHCP option
-	DEPENDS:=+libpcap +kmod-ifb
+	DEPENDS:=+libpcap +kmod-ifb +tc
 	MAINTAINER:=kmk <alex18_huang@accton.com>
 endef
 
