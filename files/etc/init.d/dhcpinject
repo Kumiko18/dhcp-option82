@@ -35,9 +35,6 @@ start_service() {
     # Load the dhcpinject config
     config_load dhcpinject
 
-    # Get the uplink interface, fall back to "eth0" if not set
-    config_get uplink "uplink" "iface"
-
     # Get the list of SSIDs
     config_list_foreach ssids ssid append_ssid
 
